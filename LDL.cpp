@@ -103,6 +103,7 @@ bool LDL::insereOrdemCrescente(int chave, Elemento dado){
 			// insere o nó depois do ponteiro anterior pAnt
 		 	if (pAnda->getChave() > chave && pAnt != nullptr) {	 
 				pAnt->getProx()->setAnt(novoNo);
+
 				novoNo->setProx(pAnda);
 				pAnt->setProx(novoNo);
 				novoNo->setAnt(pAnt);
@@ -124,9 +125,9 @@ No * LDL::busca(int chave){
 	pAnt = pAnda;
 	if(chave == pAnda->getChave()) return this->cabeca;
 	
-	if(pAnda->getChave() > chave){pAnda = pAnda->getAnt();}
+	if(pAnda->getChave() > chave){pAnt = pAnda;pAnda = pAnda->getAnt();}
 	
-	else if(pAnda->getChave() < chave){pAnda = pAnda->getProx();}
+	else if(pAnda->getChave() < chave){pAnt = pAnda;pAnda = pAnda->getProx();}
 	
 	while(pAnda->getChave() != this->cabeca->getChave() && pAnda->getChave() != chave){
 		if(pAnda->getChave() == chave){return pAnda;}
@@ -142,14 +143,15 @@ No * LDL::busca(int chave){
 			pAnt = pAnda;
 			pAnda = pAnda->getProx();
 		}
+		if(pAnda->getChave() == this->cabeca->getChave()){return nullptr;}
 	}
 	return pAnda;
 }
 bool LDL::remove(int chave){
-	if(isEmpty()) return false;
+	if(isEmpty()){cout << "Elemento não pôde ser removido." << endl; return false;};
 	No * pAnda = nullptr;//this->cabeca->getProx();
 	pAnda = busca(chave);
-	if(pAnda == nullptr){cout << "Elemento não pode ser removido" << endl;return false;}
+	if(pAnda == nullptr){cout << "Elemento não pôde ser removido." << endl;return false;}
 
 	if(pAnda->getProx() == pAnda && pAnda->getAnt() == pAnda){setCabeca(nullptr);pAnda = nullptr;return true;}
 	else{
@@ -160,6 +162,7 @@ bool LDL::remove(int chave){
 
 	pAnda->getProx()->setAnt(pAnda->getAnt());
 	pAnda->getAnt()->setProx(pAnda->getProx());
+	cout << "Remoção realizada com sucesso." << endl;
 	return true;
 	}
 }
